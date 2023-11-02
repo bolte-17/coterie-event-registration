@@ -12,5 +12,4 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Run Tests In Container
-      run: docker compose -f ./.devcontainer/docker-compose.yml run app --entrypoint /workspace "npm ci && npm run build && npm test"
-
+      run: docker compose -f ./.devcontainer/docker-compose.yml run -w /workspace app sh -c "npm ci && npm run build && npm test"
