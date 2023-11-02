@@ -1,4 +1,4 @@
-name: Docker-Compose Tests
+name: Test with Cosmos Emulator (via Docker-Compose)
 on:
   push:
     branches: [ "main" ]
@@ -10,10 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Docker Compose with Tests Action
-      uses: adambirds/docker-compose-action@v1.3.0
-      with:
-        compose-file: ./.devcontainer/docker-compose.yml
-        test-container: app
-        test-command: cd /workspace && npm ci && npm run build && npm test
+
+    - name: Run Tests In Container
+      run: docker compose -f ./.devcontainer/docker-compose.yml run app --entrypoint /workspace "npm ci && npm run build && npm test"
+
