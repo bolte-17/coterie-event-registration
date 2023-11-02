@@ -18,10 +18,6 @@ export function map<T, U>(f: (x: T) => U) {
   return bind((x: T) => ok(f(x)) as Result<U, never>);
 }
 
-export function catchError<T>(f: () => T): Result<T> {
-  try {
-    return ok(f());
-  } catch (e) {
-    return err(e instanceof Error ? e : new Error('Unknown Error'));
-  }
+export function handleError<T, E>(handler: (err: E) => T): (result: Result<T, E>) => T {
+  return r => r.ok ? r.value : handler(r.error);
 }

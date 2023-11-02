@@ -1,19 +1,20 @@
-import {pipe} from 'pipe-ts';
+import {pipe, pipeWith} from 'pipe-ts';
 import {get, post, respond, HttpStatusCode, type Conn} from './routing';
 import {createEventRegistration} from './eventRegistration/eventRegistration';
+import {map, ok, handleError, err, bind} from './result';
 
 function saveRegistration(conn: Conn) {
-  const {body: registration} = conn;
-  if (registration instanceof Error) {
-    return respond(HttpStatusCode.BAD_REQUEST, registration.message)(conn);
-  }
+  const {body} = conn;
+  const registration
+    = body instanceof Error || body === undefined || body === null
+      ? err(body ?? new Error('Expected a body payload representing registration to create'))
+      : ok(body);
 
-  const result = createEventRegistration(registration);
-  if (result.ok) {
-    return respond(HttpStatusCode.OK, result.value)(conn);
-  }
-
-  return respond(HttpStatusCode.BAD_REQUEST, result.error.message)(conn);
+  return pipeWith(registration,
+    bind(createEventRegistration),
+    map(r => respond(HttpStatusCode.OK, r)),
+    handleError(e => respond(HttpStatusCode.BAD_REQUEST, e.message)),
+  )(conn);
 }
 
 export const router = pipe(
