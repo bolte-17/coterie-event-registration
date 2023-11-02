@@ -1,0 +1,7 @@
+@host = http://localhost
+
+GET {{host}}:{{$dotenv PORT}}/ping
+
+###
+
+GET {{host}}:{{$dotenv PORT}}/unknownRoute
