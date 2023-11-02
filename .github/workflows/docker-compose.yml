@@ -16,4 +16,4 @@ jobs:
       with:
         compose-file: ./.devcontainer/docker-compose.yml
         test-container: app
-        test-command: npm ci && npm run build && npm test
+        test-command: cd /workspace && npm ci && npm run build && npm test

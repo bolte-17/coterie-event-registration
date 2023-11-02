@@ -4,7 +4,7 @@
 	"name": "Node.js & TypeScript",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/workspace",
   //"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
