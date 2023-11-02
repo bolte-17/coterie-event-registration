@@ -1,0 +1,19 @@
+name: Docker-Compose Tests
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Docker Compose with Tests Action
+      uses: adambirds/docker-compose-action@v1.3.0
+      with:
+        compose-file: ./.devcontainer/docker-compose.yml
+        test-container: app
+        test-command: npm ci && npm run build && npm test

@@ -1,9 +1,12 @@
 import {type IncomingMessage} from 'http';
+import {ValidationError} from './eventRegistration/validation';
+import {isResult} from './result';
 
 export enum HttpStatusCode {
   OK = 200,
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
 }
 
 export type Conn = {
@@ -44,8 +47,19 @@ export function post(routePath: string, plug: Plug) {
   return route('POST', routePath, plug);
 }
 
-export function respond(statusCode: HttpStatusCode, body?: unknown, halted = true): Plug {
-  return whenNotHalted(conn => ({...conn, result: {statusCode, body}, halted}));
+export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCode.OK, halted = true): Plug {
+  return whenNotHalted(conn => {
+    let result = {statusCode, body};
+    if (isResult(body)) {
+      result = body.ok ? {statusCode, body: body.value} : {statusCode: 500, body: body.error};
+    }
+
+    if (result.body instanceof Error) {
+      result = {statusCode: result.body instanceof ValidationError ? 400 : 500, body: result.body.message};
+    }
+
+    return {...conn, result, halted};
+  });
 }
 
 export function composePlugs(...plugs: Plug[]): Plug {
