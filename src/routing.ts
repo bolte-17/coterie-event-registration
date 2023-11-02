@@ -1,4 +1,4 @@
-import {type IncomingMessage, type ServerResponse} from 'http';
+import {type IncomingMessage} from 'http';
 
 export enum HttpStatusCode {
   OK = 200,
@@ -7,8 +7,6 @@ export enum HttpStatusCode {
 }
 
 export type Conn = {
-  // Req: IncomingMessage;
-  // Res: ServerResponse;
   method: IncomingMessage['method'];
   path: string;
   body: unknown | Error;
@@ -18,7 +16,7 @@ export type Conn = {
   };
   halted: boolean;
 };
-export type Plug = (c: Conn) => Conn;
+export type Plug = (c: Conn) => Conn | Promise<Conn>;
 
 export function conn(req: IncomingMessage, body: unknown | Error = {}, halted = false): Conn {
   return {
@@ -30,12 +28,12 @@ export function conn(req: IncomingMessage, body: unknown | Error = {}, halted = 
 }
 
 export function whenNotHalted(f: Plug): Plug {
-  return c => c.halted ? c : f(c);
+  return async c => c.halted ? c : f(c);
 }
 
 type HttpMethod = 'GET' | 'POST';
 function route(routeMethod: HttpMethod, routePath: string, plug: Plug): Plug {
-  return whenNotHalted(conn => conn.method === routeMethod && conn.path === routePath ? plug(conn) : conn);
+  return whenNotHalted(async conn => conn.method === routeMethod && conn.path === routePath ? plug(conn) : conn);
 }
 
 export function get(routePath: string, plug: Plug) {
@@ -48,4 +46,8 @@ export function post(routePath: string, plug: Plug) {
 
 export function respond(statusCode: HttpStatusCode, body?: unknown, halted = true): Plug {
   return whenNotHalted(conn => ({...conn, result: {statusCode, body}, halted}));
+}
+
+export function composePlugs(...plugs: Plug[]): Plug {
+  return plugs.reduce((f, g) => async x => g(await f(x)));
 }

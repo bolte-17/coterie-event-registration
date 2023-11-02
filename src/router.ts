@@ -1,9 +1,9 @@
 import {pipe, pipeWith} from 'pipe-ts';
-import {get, post, respond, HttpStatusCode, type Conn} from './routing';
+import {get, post, respond, HttpStatusCode, type Conn, composePlugs} from './routing';
 import {createEventRegistration} from './eventRegistration/eventRegistration';
 import {map, ok, handleError, err, bind} from './result';
 
-function saveRegistration(conn: Conn) {
+async function saveRegistration(conn: Conn) {
   const {body} = conn;
   const registration
     = body instanceof Error || body === undefined || body === null
@@ -17,8 +17,10 @@ function saveRegistration(conn: Conn) {
   )(conn);
 }
 
-export const router = pipe(
+export const routes = [
   get('/ping', respond(HttpStatusCode.OK, 'pong')),
   post('/create', saveRegistration),
   respond(HttpStatusCode.NOT_FOUND),
-);
+];
+
+export const router = composePlugs(...routes);

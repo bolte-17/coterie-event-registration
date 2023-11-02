@@ -7,8 +7,8 @@ import anyBody from 'body/any';
 
 config();
 const server = createServer((req, res) => {
-  anyBody(req, res, (err, body) => {
-    const {result} = router(conn(req, err || body));
+  anyBody(req, res, async (err, body) => {
+    const {result} = await router(conn(req, err || body));
     if (result) {
       res.writeHead(result.statusCode).write(JSON.stringify(result.body));
     }
