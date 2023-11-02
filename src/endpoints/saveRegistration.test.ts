@@ -1,11 +1,12 @@
-import test from 'ava';
+import t from 'ava';
 import {config} from 'dotenv';
 import {saveRegistration} from './saveRegistration';
 import {type Conn, conn} from '../routing';
+import {env} from 'process';
 
-test.before('configure environment', t => {
-  config();
-});
+config();
+
+const test = env.NO_DB ? t.skip : t;
 
 test('create registration success', async t => {
   const registration = {
