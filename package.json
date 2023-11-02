@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "build": "tsc --build",
     "watch": "node --watch-path=./dist ./dist/index.js",
     "watch-ts": "tsc -w",
     "watch-test": "ava --watch",
