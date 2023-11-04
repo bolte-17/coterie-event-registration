@@ -1,7 +1,7 @@
 import t from 'ava';
 import {config} from 'dotenv';
 import {saveRegistration} from './saveRegistration';
-import {type Conn, conn} from '../routing';
+import {type Conn} from '../routing';
 import {env} from 'process';
 
 config();
@@ -17,6 +17,7 @@ test('create registration success', async t => {
     eventType: 'Workshop',
   };
 
+  t.timeout(20000);
   const {result} = await saveRegistration({body: registration} as Conn);
 
   t.is(result?.statusCode, 200);

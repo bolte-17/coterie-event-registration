@@ -1,5 +1,5 @@
 import {type IncomingMessage} from 'http';
-import {ValidationError} from './eventRegistration/validation';
+import {ArgumentError, ValidationError} from './errors';
 import {isResult} from './result';
 
 export enum HttpStatusCode {
@@ -12,6 +12,7 @@ export enum HttpStatusCode {
 export type Conn = {
   method: IncomingMessage['method'];
   path: string;
+  searchParams: URLSearchParams;
   body: unknown | Error;
   result?: {
     statusCode: HttpStatusCode;
@@ -22,8 +23,10 @@ export type Conn = {
 export type Plug = (c: Conn) => Conn | Promise<Conn>;
 
 export function conn(req: IncomingMessage, body: unknown | Error = {}, halted = false): Conn {
+  const {pathname: path, searchParams} = new URL(req.url ?? '', `http://${req.headers?.host ?? 'example.com'}`);
   return {
-    path: new URL(req.url ?? '', `http://${req.headers?.host ?? 'example.com'}`).pathname,
+    path,
+    searchParams,
     method: req.method,
     halted,
     body,
@@ -55,7 +58,10 @@ export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCo
     }
 
     if (result.body instanceof Error) {
-      result = {statusCode: result.body instanceof ValidationError ? 400 : 500, body: result.body.message};
+      result = {
+        statusCode: result.body instanceof ValidationError || result.body instanceof ArgumentError ? 400 : 500,
+        body: result.body.message,
+      };
     }
 
     return {...conn, result, halted};

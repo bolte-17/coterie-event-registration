@@ -1,9 +1,10 @@
 import {get, post, respond, HttpStatusCode, composePlugs} from './routing';
-import {saveRegistration} from './endpoints/saveRegistration';
+import {saveRegistration, retrieveRegistration} from './endpoints';
 
 export const routes = [
   get('/ping', respond('pong')),
   post('/create', saveRegistration),
+  post('/retrieve', retrieveRegistration),
   respond({}, HttpStatusCode.NOT_FOUND),
 ];
 

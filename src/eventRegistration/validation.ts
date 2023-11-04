@@ -1,8 +1,7 @@
 import {type Result, err, ok} from '../result';
+import {ValidationError} from '../errors';
 import type EventRegistrationInput from './eventRegistrationInput';
 import {isEventRegistrationInput, ajv} from './eventRegistrationInput.validator';
-
-export class ValidationError extends Error {}
 
 export function validateInput(input: unknown): Result<EventRegistrationInput> {
   if (isEventRegistrationInput(input)) {
