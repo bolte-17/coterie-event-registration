@@ -53,3 +53,11 @@ dbTest('save and retrieve', async t => {
   t.like(retrieveResult?.body, [{...registration, totalCost: 80}]);
 });
 
+test('send message', async t => {
+  t.like(
+    await router(
+      conn({method: 'POST', url: '/message'} as IncomingMessage, {foo: 'bar'}),
+    ),
+    {result: {statusCode: 204, body: 'Message Sent'}},
+  );
+});
