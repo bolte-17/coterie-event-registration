@@ -1,4 +1,4 @@
-import {CosmosClient, type ItemDefinition, type Container} from '@azure/cosmos';
+import {CosmosClient, type ItemDefinition} from '@azure/cosmos';
 import {config} from 'dotenv';
 import {env} from 'process';
 

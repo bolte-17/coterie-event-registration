@@ -4,7 +4,7 @@ import {saveRegistration, retrieveRegistration} from './endpoints';
 export const routes = [
   get('/ping', respond('pong')),
   post('/create', saveRegistration),
-  post('/retrieve', retrieveRegistration),
+  get('/retrieve', retrieveRegistration),
   respond({}, HttpStatusCode.NOT_FOUND),
 ];
 

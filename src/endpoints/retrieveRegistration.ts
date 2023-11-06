@@ -20,7 +20,7 @@ async function fetchRegistrations(searchParams: URLSearchParams): Promise<Result
   }
 
   if (searchParams.has('email')) {
-    return fetchAllByProperty('email', searchParams.get('eventType')!).then(ok);
+    return fetchAllByProperty('email', searchParams.get('email')!).then(ok);
   }
 
   return Promise.resolve(err(new ArgumentError('Retrieve endpoint must specify one of id, email, or event type')));
@@ -32,12 +32,13 @@ async function fetchById(id: string) {
 
 async function fetchAllByProperty(propertyName: 'eventType' | 'email', value: string) {
   const container = await getContainer();
-  const response = await container.items.query<Persisted<EventRegistration>>({
-    query: `SELECT * from registrations r WHERE r.${propertyName} = *@value*`,
+
+  const response = await (container.items.query<Persisted<EventRegistration>>({
+    query: `SELECT * FROM registrations r WHERE r.${propertyName} = @value`,
     parameters: [
       {name: '@value', value},
     ],
-  }).fetchAll();
+  })).fetchAll();
 
   return response.resources;
 }
