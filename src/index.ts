@@ -1,7 +1,7 @@
 import {createServer} from 'http';
 import {config} from 'dotenv';
 import {env} from 'process';
-import { conn } from './routing/conn';
+import {conn} from './routing/conn';
 import {router} from './routing/router';
 import anyBody from 'body/any';
 

@@ -72,3 +72,16 @@ $ npm run watch
 
 As many of the requests expected by this application are not simple GET requests, the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VSCode is recommended and provided within the dev container. This allows for the [requests.http](requests.http) file to provide for easy composition of requests with custom Authorization headers or POST bodies- basically a very simplified, in-editor [Postman](https://www.postman.com/) if you are familiar with that.
 
+## Developer Notes
+
+Overall intent with this is as a breakable toy- intentionally exploring some more experimental, hopefully interesting approaches to the problem.
+
+It's not necessarily intended as a "this is how this problem should be solved in a production environment, instead exploring what works and what doesn't in this specific area. Some of the ideas in this repository seem worth adopting- for example, I think the containerized development environments are _extremely_ useful- but I'd be interested if this provokes some thought and opinions on architecture.
+
+Additional commentary on this is written in some markdown files alongside relevant source files.
+
+### Cosmos Emulator
+
+Cosmos Emulator turned out to be kind of disappointing. It's nice that it exists, since running local development or automated CI against a cloud resource is not really something I'd want to do if I can avoid it, but it makes some _strange_ choices, like the image randomly expiring afer a _trial period_.
+
+There's some race condition causing issues with testing against docker-compose/Cosmos Emulator on CI, and I've got a strong suspicion that it'd be resolvable by pulling in some wait-until-available command line utility, but that's a problem for later.
