@@ -22,10 +22,14 @@ const testRoute = test.macro(async (t, {method, url, body}: {method: string; url
   t.like((await router(c)).result, expected);
 });
 
+const badContentType = Error('Unsupported Media Type');
+(badContentType as any).statusCode = 415;
+
 test('ping', testRoute, {method: 'GET', url: '/ping'}, {statusCode: 200, body: 'pong'}, false);
 test('not found', testRoute, {method: 'GET', url: '/something-undefined'}, {statusCode: 404}, false);
 test('unauthorized', testRoute, {method: 'GET', url: '/api/v1/retrieve?id=1'}, {statusCode: 403}, false);
 test('send message', testRoute, {method: 'POST', url: '/api/v1/message'}, {statusCode: 204, body: 'Message Sent'});
+test('malformed body', testRoute, {method: 'POST', url: '/api/v1/message', body: badContentType}, {statusCode: 415});
 
 const dbTest = env.NO_DB ? test.skip : test;
 

@@ -33,4 +33,6 @@ export function ensureAuth(routePrefix: string, ...children: Plug[]): Plug {
   };
 }
 
-export class NotAuthorizedError extends Error {}
+export class NotAuthorizedError extends Error {
+  statusCode = 403;
+}

@@ -51,8 +51,14 @@ export function get(routePath: string, plug: Plug) {
   return route('GET', routePath, plug);
 }
 
-export function post(routePath: string, plug: Plug) {
-  return route('POST', routePath, plug);
+export function post(routePath: string, plug: Plug, opts = {checkBody: true}) {
+  return route('POST', routePath, async c => {
+    if (opts.checkBody && c.body instanceof Error) {
+      return respond(c.body, 400)(c);
+    }
+
+    return plug(c);
+  });
 }
 
 export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCode.OK, halted = true): Plug {
@@ -74,15 +80,12 @@ export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCo
 }
 
 function errorStatusCode(e: Error) {
-  if (e instanceof ValidationError || e instanceof ArgumentError) {
-    return 400;
-  }
+  return hasStatusCode(e) ? e.statusCode : 500;
 
-  if (e instanceof AuthorizationError) {
-    return 403;
+  function hasStatusCode(obj: unknown): obj is {statusCode: number} {
+    const statusCode = (obj as {statusCode: number})?.statusCode;
+    return statusCode !== undefined && typeof statusCode === 'number';
   }
-
-  return 500;
 }
 
 export function composePlugs(...plugs: Plug[]): Plug {

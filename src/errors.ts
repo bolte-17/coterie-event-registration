@@ -1,3 +1,7 @@
 
-export class ValidationError extends Error { }
-export class ArgumentError extends Error { }
+export class ValidationError extends Error {
+  statusCode = 400;
+}
+export class ArgumentError extends Error {
+  statusCode = 400;
+}

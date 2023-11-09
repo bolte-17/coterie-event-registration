@@ -8,13 +8,22 @@ import anyBody from 'body/any';
 config();
 const server = createServer((req, res) => {
   anyBody(req, res, async (err, body) => {
-    const {result} = await router(conn(req, err || body));
+    const initialConn = conn(req, err || body);
+    const resultConn = await router(initialConn);
+    const {result} = resultConn;
     if (result) {
       res.writeHead(result.statusCode).write(JSON.stringify(result.body));
+    } else {
+      console.error(resultConn);
+      res.writeHead(500).write('Internal Server Error');
     }
+
+    res.end();
   });
 });
 
-server.listen(env.PORT);
+server.on('listening', () => {
+  console.log('server up at', server.address());
+});
 
-console.log('server up at', server.address());
+server.listen(env.PORT);
