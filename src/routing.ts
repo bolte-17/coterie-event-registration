@@ -1,11 +1,13 @@
 import {type IncomingMessage} from 'http';
 import {ArgumentError, ValidationError} from './errors';
 import {isResult} from './result';
+import {NotAuthorizedError as AuthorizationError} from './auth';
 
 export enum HttpStatusCode {
   OK = 200,
   NO_CONTENT = 204,
   BAD_REQUEST = 400,
+  NOT_AUTHORIZED = 403,
   NOT_FOUND = 404,
   INTERNAL_SERVER_ERROR = 500,
 }
@@ -13,8 +15,9 @@ export enum HttpStatusCode {
 export type Conn = {
   method: IncomingMessage['method'];
   path: string;
-  searchParams: URLSearchParams;
-  body: unknown | Error;
+  searchParams?: URLSearchParams;
+  headers?: Record<string, string | string[] | undefined>;
+  body?: unknown | Error;
   result?: {
     statusCode: HttpStatusCode;
     body?: any;
@@ -28,6 +31,7 @@ export function conn(req: IncomingMessage, body: unknown | Error = {}, halted = 
   return {
     path,
     searchParams,
+    headers: req.headers,
     method: req.method,
     halted,
     body,
@@ -60,7 +64,7 @@ export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCo
 
     if (result.body instanceof Error) {
       result = {
-        statusCode: result.body instanceof ValidationError || result.body instanceof ArgumentError ? 400 : 500,
+        statusCode: errorStatusCode(result.body),
         body: result.body.message,
       };
     }
@@ -69,6 +73,18 @@ export function respond(body: unknown, statusCode: HttpStatusCode = HttpStatusCo
   });
 }
 
+function errorStatusCode(e: Error) {
+  if (e instanceof ValidationError || e instanceof ArgumentError) {
+    return 400;
+  }
+
+  if (e instanceof AuthorizationError) {
+    return 403;
+  }
+
+  return 500;
+}
+
 export function composePlugs(...plugs: Plug[]): Plug {
-  return plugs.reduce((f, g) => async x => g(await f(x)));
+  return plugs.reduce((f, g) => async x => g(await f(x)), x => x);
 }

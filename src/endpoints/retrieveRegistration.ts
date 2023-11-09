@@ -10,16 +10,16 @@ export async function retrieveRegistration(conn: Conn) {
   return respond(result)(conn);
 }
 
-async function fetchRegistrations(searchParams: URLSearchParams): Promise<Result<Array<Persisted<EventRegistration>>>> {
-  if (searchParams.has('id')) {
+async function fetchRegistrations(searchParams?: URLSearchParams): Promise<Result<Array<Persisted<EventRegistration>>>> {
+  if (searchParams?.has('id')) {
     return fetchById(searchParams.get('id')!).then(r => r === undefined ? ok([]) : ok([r]));
   }
 
-  if (searchParams.has('eventType')) {
+  if (searchParams?.has('eventType')) {
     return fetchAllByProperty('eventType', searchParams.get('eventType')!).then(ok);
   }
 
-  if (searchParams.has('email')) {
+  if (searchParams?.has('email')) {
     return fetchAllByProperty('email', searchParams.get('email')!).then(ok);
   }
 
@@ -34,7 +34,7 @@ async function fetchAllByProperty(propertyName: 'eventType' | 'email', value: st
   const container = await getContainer();
 
   const response = await (container.items.query<Persisted<EventRegistration>>({
-    query: `SELECT * FROM registrations r WHERE r.${propertyName} = @value`,
+    query: `SELECT * FROM registrations r WHERE r.${propertyName} = @value ORDER BY r.id`,
     parameters: [
       {name: '@value', value},
     ],
