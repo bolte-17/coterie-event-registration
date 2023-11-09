@@ -4,7 +4,7 @@ import {generateToken, ensureAuth} from './auth';
 
 export const routes = [
   get('/ping', respond('pong')),
-  post('/auth', respond(generateToken())),
+  post('/auth', respond(generateToken()), {checkBody: false}),
   ensureAuth('/api/v1',
     post('/create', saveRegistration),
     get('/retrieve', retrieveRegistration),

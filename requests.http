@@ -1,7 +1,50 @@
 @host = http://localhost
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYXV0aG9yaXplZCEiLCJpYXQiOjE2OTk1NTk2OTMsImF1ZCI6ImV2ZW50cmVnaXN0cmF0aW9uIiwiaXNzIjoiZXZlbnRyZWdpc3RyYXRpb24iLCJzdWIiOiJjYzg2MzZkMC0wOThmLTQ0NjQtODdiZi1jM2RhODYwOWQxZjEifQ.n-8LAuw08cNgkz6sRzk3ria_mZZS3Dt0lTdfGXbzTgI
 
+### Ping server to check if it's up
 GET {{host}}:{{$dotenv PORT}}/ping
 
-###
-
+### Unknown route returns 404
 GET {{host}}:{{$dotenv PORT}}/unknownRoute
+
+### Request new auth token 
+POST {{host}}:{{$dotenv PORT}}/auth
+
+### Create Endpoint
+POST {{host}}:{{$dotenv PORT}}/api/v1/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "age": 20,
+  "eventType": "Workshop",
+  "discountCode": "EARLYBIRD"
+}
+
+### Retrieve Endpoint (by id)
+# @prompt id
+GET {{host}}:{{$dotenv PORT}}/api/v1/retrieve
+  ?id={{id}}
+Authorization: Bearer {{token}}
+
+### Retrieve Endpoint (by email)
+GET {{host}}:{{$dotenv PORT}}/api/v1/retrieve
+  ?email=johndoe@example.com
+Authorization: Bearer {{token}}
+
+### Retrieve Endpoint (by eventType)
+GET {{host}}:{{$dotenv PORT}}/api/v1/retrieve
+  ?eventType=Workshop
+Authorization: Bearer {{token}}
+
+### Message Endpoint
+POST {{host}}:{{$dotenv PORT}}/api/v1/message
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "data": "a message"
+}
