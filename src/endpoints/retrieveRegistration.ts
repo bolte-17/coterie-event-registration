@@ -2,7 +2,8 @@ import {type Persisted, fetch, getContainer} from '../cosmos';
 import {ArgumentError} from '../errors';
 import {type EventRegistration} from '../eventRegistration/eventRegistration';
 import {type Result, ok, err} from '../result';
-import {respond, type Conn} from '../routing';
+import {respond} from '../routing/routing';
+import {type Conn} from '../routing/conn';
 
 export async function retrieveRegistration(conn: Conn) {
   const result = await fetchRegistrations(conn.searchParams);

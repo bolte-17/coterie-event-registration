@@ -1,6 +1,6 @@
 import anyTest, {type TestFn} from 'ava';
 import {router} from './router';
-import {conn} from './routing';
+import {conn} from './conn';
 import {type IncomingMessage} from 'http';
 import {env} from 'process';
 import {config} from 'dotenv';

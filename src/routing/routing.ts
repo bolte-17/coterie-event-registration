@@ -1,7 +1,5 @@
-import {type IncomingMessage} from 'http';
-import {ArgumentError, ValidationError} from './errors';
-import {isResult} from './result';
-import {NotAuthorizedError as AuthorizationError} from './auth';
+import {isResult} from '../result';
+import {type Conn} from './conn';
 
 export enum HttpStatusCode {
   OK = 200,
@@ -12,31 +10,7 @@ export enum HttpStatusCode {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type Conn = {
-  method: IncomingMessage['method'];
-  path: string;
-  searchParams?: URLSearchParams;
-  headers?: Record<string, string | string[] | undefined>;
-  body?: unknown | Error;
-  result?: {
-    statusCode: HttpStatusCode;
-    body?: any;
-  };
-  halted: boolean;
-};
 export type Plug = (c: Conn) => Conn | Promise<Conn>;
-
-export function conn(req: IncomingMessage, body: unknown | Error = {}, halted = false): Conn {
-  const {pathname: path, searchParams} = new URL(req.url ?? '', `http://${req.headers?.host ?? 'example.com'}`);
-  return {
-    path,
-    searchParams,
-    headers: req.headers,
-    method: req.method,
-    halted,
-    body,
-  };
-}
 
 export function whenNotHalted(f: Plug): Plug {
   return async c => c.halted ? c : f(c);

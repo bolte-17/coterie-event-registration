@@ -1,6 +1,6 @@
 import t from 'ava';
 import {config} from 'dotenv';
-import {type Conn} from '../routing';
+import {type Conn} from '../routing/conn';
 import {env} from 'process';
 import {getContainer} from '../cosmos';
 import {type EventRegistration} from '../eventRegistration/eventRegistration';

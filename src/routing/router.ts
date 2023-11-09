@@ -1,6 +1,6 @@
 import {get, post, respond, HttpStatusCode, composePlugs} from './routing';
-import {saveRegistration, retrieveRegistration, sendMessage} from './endpoints';
-import {generateToken, ensureAuth} from './auth';
+import {saveRegistration, retrieveRegistration, sendMessage} from '../endpoints';
+import {generateToken, ensureAuth} from '../auth';
 
 export const routes = [
   get('/ping', respond('pong')),

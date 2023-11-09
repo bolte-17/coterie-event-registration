@@ -1,6 +1,6 @@
 import test from 'ava';
 import {generateToken, ensureAuth} from './auth';
-import {type Conn} from './routing';
+import {type Conn} from './routing/conn';
 import {config} from 'dotenv';
 
 test.before('config environment', () => {

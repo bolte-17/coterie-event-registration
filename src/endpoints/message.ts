@@ -1,6 +1,7 @@
 import {ServiceBusClient, type ServiceBusSender} from '@azure/service-bus';
 import {env} from 'process';
-import {respond, type Conn, HttpStatusCode} from '../routing';
+import {respond, HttpStatusCode} from '../routing/routing';
+import {type Conn} from '../routing/conn';
 
 function createSender() {
   if (env.SERVICE_BUS_CONNECTION_STRING) {

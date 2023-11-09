@@ -1,7 +1,7 @@
 import t from 'ava';
 import {config} from 'dotenv';
 import {saveRegistration} from './saveRegistration';
-import {type Conn} from '../routing';
+import {type Conn} from '../routing/conn';
 import {env} from 'process';
 
 config();

@@ -1,5 +1,6 @@
 import {env} from 'process';
-import {respond, type Conn, type Plug, composePlugs} from './routing';
+import {respond, type Plug, composePlugs} from './routing/routing';
+import {type Conn} from './routing/conn';
 import {sign, verify} from 'jsonwebtoken';
 
 const opts = {
