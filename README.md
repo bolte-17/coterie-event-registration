@@ -28,17 +28,17 @@ This project was developed with Node v20 and TypeScript. The Typescript compiler
 
 Install:
 ```sh
-$ npm install
+npm install
 ```
 
 Build:
 ```sh
-$ npm run build
+npm run build
 ```
 
 Watch mode is available to automatically rebuild when changes to source files are saved:
 ```sh
-$ npm run watch-ts
+npm run watch-ts
 ```
 
 ## Testing
@@ -47,25 +47,25 @@ $ npm run watch-ts
 
 With prerequisites installed and project built, 
 ```sh
-$ npm test
+npm test
 ```
 
 AVA also supports a watch mode to rerun tests upon source file changes, and a convenience alias is provided as an npm script:
 ```sh
-$ npm run watch-test
+npm run watch-test
 ```
 
 ## Running
 
 With prerequisites installed and project built, start the node server:
 ```sh
-$ npm start
+npm start
 ```
 
 For development purposes, watch mode can be useful to immediately rebuild and restart the server.
 
 ```sh
-$ npm run watch
+npm run watch
 ```
 
 ## Building and Running in Docker
@@ -74,18 +74,18 @@ A Dockerfile is provided in the root of the repository. This is the intended bui
 
 Build:
 ```sh
-$ docker build -t event-registration
+docker build -t event-registration
 ```
 
 The app requires a connection to a Cosmos DB, so as an example, if running the emulator as:
 ```sh
-$ docker run --publish 8081:8081 --publish 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator 
+docker run --publish 8081:8081 --publish 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator 
 ```
 
 then the app can be started with appropriate configuration as:
 
 ```sh
-$ docker run \
+docker run \
     -e COSMOS_ENDPOINT=https://host.docker.internal:8081 \
     -e COSMOS_KEY=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw== \
     -e JWT_SECRET_KEY=abcdef00 \
