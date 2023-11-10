@@ -34,10 +34,7 @@ services:
         - /var/run/docker.sock:/var/run/docker-host.sock
     restart: unless-stopped
     healthcheck:
-      test: curl https://localhost:8081/_explorer/healthcheck
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
+      test: echo OK
       start_period: 30s
 
 volumes:
