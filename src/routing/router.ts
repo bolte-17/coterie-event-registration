@@ -3,7 +3,7 @@ import {saveRegistration, retrieveRegistration, sendMessage} from '../endpoints'
 import {generateToken, ensureAuth} from '../auth';
 
 export const routes = [
-  get('/ping', respond('pong')),
+  get('/healthcheck', respond('OK')),
   post('/auth', respond(generateToken()), {checkBody: false}),
   ensureAuth('/api/v1',
     post('/create', saveRegistration),

@@ -1,8 +1,8 @@
 @host = http://localhost
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYXV0aG9yaXplZCEiLCJpYXQiOjE2OTk1NTk2OTMsImF1ZCI6ImV2ZW50cmVnaXN0cmF0aW9uIiwiaXNzIjoiZXZlbnRyZWdpc3RyYXRpb24iLCJzdWIiOiJjYzg2MzZkMC0wOThmLTQ0NjQtODdiZi1jM2RhODYwOWQxZjEifQ.n-8LAuw08cNgkz6sRzk3ria_mZZS3Dt0lTdfGXbzTgI
 
-### Ping server to check if it's up
-GET {{host}}:{{$dotenv PORT}}/ping
+### Health Check endpoint
+GET {{host}}:{{$dotenv PORT}}/healthcheck
 
 ### Unknown route returns 404
 GET {{host}}:{{$dotenv PORT}}/unknownRoute

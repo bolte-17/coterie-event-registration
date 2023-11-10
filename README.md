@@ -68,6 +68,35 @@ For development purposes, watch mode can be useful to immediately rebuild and re
 $ npm run watch
 ```
 
+## Building and Running in Docker
+
+A Dockerfile is provided in the root of the repository. This is the intended build for production release, and excludes files only needed in development.
+
+Build:
+```sh
+$ docker build -t event-registration
+```
+
+The app requires a connection to a Cosmos DB, so as an example, if running the emulator as:
+```sh
+$ docker run --publish 8081:8081 --publish 10250-10255:10250-10255 mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator 
+```
+
+then the app can be started with appropriate configuration as:
+
+```sh
+$ docker run \
+    -e COSMOS_ENDPOINT=https://host.docker.internal:8081 \
+    -e COSMOS_KEY=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw== \
+    -e JWT_SECRET_KEY=abcdef00 \
+    -e COSMOS_DATABASE='event-registration' \
+    -e COSMOS_CONTAINER='event-registration' \
+    -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+    -e PORT=3000 \
+    --publish 3000:3000 \
+    event-registration
+```
+
 ## Making Requests
 
 As many of the requests expected by this application are not simple GET requests, the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VSCode is recommended and provided within the dev container. This allows for the [requests.http](requests.http) file to provide for easy composition of requests with custom Authorization headers or POST bodies- basically a very simplified, in-editor [Postman](https://www.postman.com/) if you are familiar with that.

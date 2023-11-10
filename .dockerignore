@@ -1,0 +1,9 @@
+.devcontainer
+.github
+.vscode
+docs
+.git
+.gitignore
+README.md
+requests.http
+node_modules
